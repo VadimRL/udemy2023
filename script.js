@@ -3,7 +3,7 @@
 |------- 19. Задание на урок: -------|
 |------------------------------------|
 
-1) Создать переменную movieRating и в неё поместить ответ от пользователя на вопрос:
+1) Создать переменную numberOfFilms и в неё поместить ответ от пользователя на вопрос:
 'Сколько фильмов вы уже посмотрели?'
 
 2) Создать объект personalMovieDB и в него поместить такие свойства:
@@ -38,50 +38,105 @@
 "Просмотрено довольно мало фильмов", если от 10 до 30 - "Вы классический зритель", а если больше - 
 "Вы киноман". А если не подошло ни к одному варианту - "Произошла ошибка"
 
-4) Потренироваться и переписать цикл еще двумя способами*/
+4) Потренироваться и переписать цикл еще двумя способами
+
+|-----------------------------------------------------|
+|------- 29. Практика , ч3. Используем функции -------|
+|-----------------------------------------------------|
+
+Задание на урок:
+
+1) Первую часть задания повторить по уроку
+
+2) Создать функцию showMyDB, которая будет проверять свойство privat. Если стоит в позиции
+false - выводит в консоль главный объект программы
+
+3) Создать функцию writeYourGenres в которой пользователь будет 3 раза отвечать на вопрос 
+"Ваш любимый жанр под номером ${номер по порядку}". Каждый ответ записывается в массив данных
+genres
+
+P.S. Функции вызывать не обязательно
+
+*/
+
 
 "use strict";
 
-let movieRating = 0;
+let numberOfFilms = 0;
 
-do {
-    movieRating = prompt("How many movies have you watched?", 0);
-    console.log(movieRating == null);
-} while (movieRating == null || movieRating.trim() == "" || isNaN(movieRating) || movieRating >= 50);
+function start() {
+    do {
+        numberOfFilms = prompt("How many movies have you watched?", 0);
+        console.log(numberOfFilms.trim() == "");
+    } while (numberOfFilms == null || numberOfFilms.trim() == "" || isNaN(numberOfFilms) || numberOfFilms >= 50);
+}
+
+// start();
 
 const personalMovieDB = {
-    count: movieRating,
+    count: numberOfFilms,
     movies: {},
     actors: {},
     genres: [],
-    privat: false,
+    privat: true,
 };
 
-// userNumber?.trim() == "" || !isFinite(userNumber) || (userNumber !== null && userNumber <= 100)
-for (let i = 0; i < 2; i++) {
-    console.log(i);
-    const lastMovie = prompt("What is the name of the last movie you watched", "");
-    const movieRate = prompt("How would you rate it?", "");
-
-    if (
-        lastMovie == "" ||
-        movieRate == "" ||
-        isNaN(movieRate) ||
-        lastMovie == null ||
-        movieRate == null ||
-        lastMovie.length > 50 ||
-        movieRate > 50
-    ) {
-        i--;
-    } else {
-        personalMovieDB.movies[lastMovie] = movieRate;
+function rememberMyFilms() {
+    for (let i = 0; i < 2; i++) {
+        const lastMovie = prompt("What is the name of the last movie you watched", "");
+        const movieRate = prompt("How would you rate it?", "");
+    
+        if (
+            lastMovie == "" ||
+            movieRate == "" ||
+            isNaN(movieRate) ||
+            lastMovie == null ||
+            movieRate == null ||
+            lastMovie.length > 50 ||
+            movieRate > 50
+        ) {
+            i--;
+        } else {
+            personalMovieDB.movies[lastMovie] = movieRate;
+        }
     }
 }
 
-if (personalMovieDB.count < 10) {
-    alert("Watched quite a few movies");
-} else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
-    alert("You are a classicial movie viewer");
-} else {
-    alert("You are a movie buff");
+// rememberMyFilms();
+
+function detectPersonalLevel() {
+    if (personalMovieDB.count < 10) {
+        alert("Watched quite a few movies");
+    } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
+        alert("You are a classicial movie viewer");
+    } else {
+        alert("You are a movie buff");
+    }
 }
+
+// detectPersonalLevel();
+
+function showMyDB() {
+    if(personalMovieDB.privat) {
+        console.log("error: access danied");
+        return;
+    }
+    
+    console.log(personalMovieDB);
+}
+
+function writeYourGenres() {
+    
+    for (let i = 0; i < 3; i++) {
+        const genre = prompt("Whire your favorite movie genre number " + (i + 1), "");
+    
+        if (genre == "" || isFinite(genre) || genre == null || genre.length > 50) {
+            i--;
+        } else {
+            personalMovieDB.genres[i] = genre;
+        }
+    }
+}
+
+writeYourGenres();
+

@@ -57,86 +57,98 @@ genres
 
 P.S. Функции вызывать не обязательно
 
+|-----------------------------------------------------|
+|------- 37. Практика , ч4. Используем объекты -------|
+|-----------------------------------------------------|
+
+Задание на урок:
+
+1) У нас уже есть рабочее приложение, состоящее из отдельных функций. Представьте, что
+перед вами стоит задача переписать его так, чтобы все функции стали методами объекта personalMovieDB
+Такое случается в реальных продуктах при смене технологий или подхода к архитектуре программы
+
+2) Создать метод toggleVisibleMyDB, который при вызове будет проверять свойство privat. Если оно false - он
+переключает его в true, если true - переключает в false. Протестировать вместе с showMyDB.
+
+3) В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку. 
+Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены - 
+при помощи метода forEach вывести в консоль сообщения в таком виде:
+"Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"
+
 */
 
 
 "use strict";
 
-let numberOfFilms = 0;
-
-function start() {
-    do {
-        numberOfFilms = prompt("How many movies have you watched?", 0);
-        console.log(numberOfFilms.trim() == "");
-    } while (numberOfFilms == null || numberOfFilms.trim() == "" || isNaN(numberOfFilms) || numberOfFilms >= 50);
-}
-
-// start();
-
 const personalMovieDB = {
-    count: numberOfFilms,
+    count: 0,
     movies: {},
     actors: {},
     genres: [],
-    privat: true,
+    privat: false,
+    start() {
+        let numberOfFilms = 0;
+        do {
+            numberOfFilms = prompt("How many movies have you watched?", 0);
+        } while (numberOfFilms == null || numberOfFilms.trim() == "" || isNaN(numberOfFilms));
+        this.count = numberOfFilms;
+    },
+    rememberMyFilms() {
+        for (let i = 0; i < 2; i++) {
+            const lastMovie = prompt("What is the name of the last movie you watched", "");
+            const movieRate = prompt("How would you rate it?", "");
+        
+            if (
+                lastMovie == null ||
+                movieRate == null ||
+                lastMovie.trim() == "" ||
+                movieRate.trim() == "" ||
+                isNaN(movieRate) ||
+                lastMovie.length > 50 ||
+                movieRate > 50
+            ) {
+                i--;
+                alert("An error!");
+            } else {
+                this.movies[lastMovie] = movieRate;
+            }
+        }
+    },
+    detectPersonalLevel() {
+        if (this.count < 10) {
+            alert("Watched quite a few movies");
+        } else if (this.count >= 10 && this.count < 30) {
+            alert("You are a classicial movie viewer");
+        } else {
+            alert("You are a movie buff");
+        }
+    },
+    showMyDB() {
+        if(this.privat) {
+            console.log("error: access danied");
+            return;
+        }
+        
+        console.log(personalMovieDB);
+    },
+    writeYourGenres() {
+        
+        for (let i = 0; i < 3; i++) {
+            const genre = prompt("Whire your favorite movie genre number " + (i + 1), "").toLowerCase();
+        
+            if (genre == null || genre.trim() == "" || isFinite(genre)) {
+                i--;
+            } else {
+                personalMovieDB.genres[i] = genre;
+            }
+        }
+
+        this.genres.forEach(function(item, index) {
+            console.log(`Любимый жанр #${index + 1} - это ${item}`);
+        });
+    },
+    toggleVisibleMyDB() {
+        this.privat = !this.privat;
+    }
 };
-
-function rememberMyFilms() {
-    for (let i = 0; i < 2; i++) {
-        const lastMovie = prompt("What is the name of the last movie you watched", "");
-        const movieRate = prompt("How would you rate it?", "");
-    
-        if (
-            lastMovie == "" ||
-            movieRate == "" ||
-            isNaN(movieRate) ||
-            lastMovie == null ||
-            movieRate == null ||
-            lastMovie.length > 50 ||
-            movieRate > 50
-        ) {
-            i--;
-        } else {
-            personalMovieDB.movies[lastMovie] = movieRate;
-        }
-    }
-}
-
-// rememberMyFilms();
-
-function detectPersonalLevel() {
-    if (personalMovieDB.count < 10) {
-        alert("Watched quite a few movies");
-    } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
-        alert("You are a classicial movie viewer");
-    } else {
-        alert("You are a movie buff");
-    }
-}
-
-// detectPersonalLevel();
-
-function showMyDB() {
-    if(personalMovieDB.privat) {
-        console.log("error: access danied");
-        return;
-    }
-    
-    console.log(personalMovieDB);
-}
-
-function writeYourGenres() {
-    
-    for (let i = 0; i < 3; i++) {
-        const genre = prompt("Whire your favorite movie genre number " + (i + 1), "");
-    
-        if (genre == "" || isFinite(genre) || genre == null || genre.length > 50) {
-            i--;
-        } else {
-            personalMovieDB.genres[i] = genre;
-        }
-    }
-}
-
-writeYourGenres();
 
